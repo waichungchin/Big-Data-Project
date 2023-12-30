@@ -1,0 +1,47 @@
+root@ip-172-31-81-240:~# sudo su – hadoop
+
+hadoop@ip-172-31-81-240:~$ hdfs namenode -format
+
+hadoop@ip-172-31-81-240:~$ start-all.sh
+
+hadoop@ip-172-31-81-240:~$ hadoop fs -mkdir /user/hadoop/Assignment
+
+hadoop@ip-172-31-81-240:~$ hadoop fs -ls /user/hadoop/Assignment
+
+hadoop@ip-172-31-81-240:~$ aws s3 cp s3://bigdata.mybacket/steam_reviews.csv.zip s3://bigdata.mybacket/Assignment/steam_reviews.csv.zip
+
+hadoop@ip-172-31-81-240:~$ cd IST3134/
+
+hadoop@ip-172-31-81-240:~/IST3134$ ls
+
+hadoop@ip-172-31-81-240:~/IST3134$ unzip steam_reviews.csv.zip
+
+hadoop@ip-172-31-81-240:~/IST3134$ hadoop fs -put steam_reviews.csv/
+
+hadoop@ip-172-31-81-240:~/IST3134$ ls -altr
+
+hadoop@ip-172-31-81-240:~/IST3134$ mkdir ~/workspace
+
+hadoop@ip-172-31-81-240:~/IST3134$ cp -r wordcount/ ~/workspace/
+
+hadoop@ip-172-31-81-240:~/IST3134$ cd ~/workspace/wordcount/src
+
+hadoop@ip-172-31-81-240:~/workspace/wordcount/src$ ls
+
+hadoop@ip-172-31-81-240:~/workspace/wordcount/src$ ls stubs
+
+hadoop@ip-172-31-81-240:~/workspace/wordcount/src$ hadoop classpath
+
+hadoop@ip-172-31-81-240:~/workspace/wordcount/src$ javac -classpath `hadoop classpath` stubs/*.java
+
+hadoop@ip-172-31-81-240:~/workspace/wordcount/src$ jar cvf wc.jar stubs/*.class
+
+hadoop@ip-172-31-81-240:~/workspace/wordcount/src$ time hadoop jar wc.jar stubs.WordCount steam_reviews.csv wordcounts
+
+hadoop@ip-172-31-81-240:~/workspace/wordcount/src$ hadoop fs -ls wordcounts
+
+hadoop@ip-172-31-81-240:~/workspace/wordcount/src$ hadoop fs -cat wordcounts/part-r-00000 | less
+
+hadoop@ip-172-31-81-240:~/workspace/wordcount/src$ hadoop jar wc.jar stubs.WordCount steam_reviews.csv/review pwords
+
+hadoop@ip-172-31-81-240:~/workspace/wordcount/src$ hadoop fs -rm -r wordcounts pwords
